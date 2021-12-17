@@ -5,7 +5,9 @@
   "type": "module",
   "exports": "./generate.js",
   "scripts": {
-    "start": "node generate.js && node serve.js"
+    "start": "node generate.js && node serve.js",
+    "generate": "node generate.js",
+    "serve": "node serve.js"
   },
   "repository": {
     "type": "git",
