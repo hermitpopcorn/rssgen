@@ -2,7 +2,7 @@
 
 ## What is this
 
-Node CLI app to generate RSS files from crawling sites. And also serve them because my RSS reader extension doesn't accept loading files locally using file:// *for some goddang reason*.
+Node CLI app to generate RSS files from crawling sites. And also ~~serve them because my RSS reader extension doesn't accept loading files locally using file:// *for some goddang reason*~~ upload them somewhere through FTP. Yay for free hosting services.
 
 I use it to generate manga updates feed (Bokuyaba and Yangaru). These free chapters disappear after a while you know? Gotta stay updated and read them while they're there.
 
