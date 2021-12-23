@@ -40,7 +40,7 @@ export default {
 					if (linkDOM && titleDOM) {
 						chapters.push({
 							manga: 'Yangaru',
-							link: 'https://mangahack.com'.concat(linkDOM.href),
+							url: 'https://mangahack.com'.concat(linkDOM.href),
 							title: titleDOM.innerHTML,
 							date: parseDate(dateDOM.innerHTML),
 						});

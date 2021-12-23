@@ -54,14 +54,12 @@ function generateRSS(gofer, chapters) {
 		site_url: gofer.url,
 	});
 
-	for (let i of chapters) {
-		const item = {
-			title: i.title,
-			url: i.link,
-			guid: i.id,
-		};
-		if (i.date) { item.date = i.date; }
-		feed.item(item);
+	for (let i in chapters) {
+		let chapter = chapters[i];
+		chapter.guid = i;
+		delete chapter.manga;
+
+		feed.item(chapter);
 	}
 	
 	return fs.writeFileSync(`./rss/${gofer.manga}.rss`, feed.xml());
@@ -86,14 +84,14 @@ export default () => {
 					}
 				}
 		
-				console.log(`[GOFR] ${gofer.manga}: Saving retrieved ${chapters.length} chapter(s) to database.`);
+				console.log(`[GOFR] ${gofer.manga}: Saving retrieved ${chapters.length} chapter(s) to database...`);
 				await saveChapters(chapters);
 		
-				console.log(`[GOFR] ${gofer.manga}: Loading all saved chapters from database.`);
+				console.log(`[GOFR] ${gofer.manga}: Loading all saved chapters from database...`);
 				chapters = await loadChapters(gofer);
 				
 				
-				console.log(`[GOFR] ${gofer.manga}: Generating RSS file.`);
+				console.log(`[GOFR] ${gofer.manga}: Generating RSS file...`);
 				generateRSS(gofer, chapters);
 		
 				console.log(`[GOFR] ${gofer.manga}: RSS file created.`);

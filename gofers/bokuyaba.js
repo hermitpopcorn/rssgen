@@ -21,7 +21,7 @@ export default {
 					if (linkDOM && titleDOM) {
 						chapters.push({
 							manga: 'Bokuyaba',
-							link: 'https://mangacross.jp'.concat(linkDOM.href),
+							url: 'https://mangacross.jp'.concat(linkDOM.href),
 							title: titleDOM.innerHTML,
 						});
 					}
