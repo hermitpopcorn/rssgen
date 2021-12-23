@@ -1,3 +1,4 @@
+import chalk from 'chalk';
 import {} from 'dotenv/config';
 import fs from 'fs';
 import ftpClient from 'ftp';
@@ -13,15 +14,15 @@ ftp.on('ready', () => {
 	for (let i of files) {
 		ftp.put(`./rss/${i}`, process.env.FTP_PATH.concat(i), false, (error) => {
 			if (error) {
-				console.error(`[UPLD] Error: ${error.message}`);
+				console.error(chalk.blue('[UPLD]') + chalk.red(` Error: ${error.message}`));
 			}
-			console.log(`[UPLD] Uploaded ${i}.`);
+			console.log(chalk.blue('[UPLD]') + ` Uploaded ${i}.`);
 		});
 	}
 	ftp.end();
 });
 
-console.log('[UPLD] Connecting to FTP...');
+console.log(chalk.blue('[UPLD]') + ' Connecting to FTP...');
 ftp.connect({
 	host: process.env.FTP_HOST,
 	port: Number(process.env.FTP_PORT),

@@ -1,6 +1,7 @@
 import fs from 'fs';
 import express from 'express';
 import path from 'path';
+import chalk from 'chalk';
 
 let __dirname = path.resolve(path.dirname(''));
 const app = express();
@@ -13,5 +14,5 @@ for (let i of fs.readdirSync('./rss/')) {
 }
 
 app.listen(3000, () => {
-	console.log('[SERV] Serving RSS files at port 3000.');
+	console.log(chalk.blue('[SERV]') + ' Serving RSS files at port 3000.');
 });

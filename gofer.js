@@ -3,6 +3,7 @@ import { Chapter } from './db.js';
 import Bokuyaba from './gofers/bokuyaba.js';
 import Yangaru from './gofers/yangaru.js';
 import fs from 'fs';
+import chalk from 'chalk';
 
 function CrawlError(message = '') {
     this.name = 'CrawlError';
@@ -14,7 +15,7 @@ async function crawlChapters(gofer) {
 	let retries = 3;
 	let chapters = [];
 	while (chapters.length < 1) {
-		console.log(`[GOFR] ${gofer.manga}: Crawling for chapters... (${retries} retries remaining)`);
+		console.log(chalk.blue('[GOFR]') + ` ${gofer.manga}: Crawling for chapters... (${retries} retries remaining)`);
 		chapters = await gofer.crawl();
 		retries -= 1;
 		if (retries < 0) {
@@ -77,30 +78,30 @@ export default () => {
 					chapters = await crawlChapters(gofer);
 				} catch(e) {
 					if (e instanceof CrawlError) {
-						console.error(e.message);
+						console.error(chalk.blue('[GOFR]') + ' ' + chalk.red(e.message));
 						reject(e);
 					} else {
 						throw e;
 					}
 				}
 		
-				console.log(`[GOFR] ${gofer.manga}: Saving retrieved ${chapters.length} chapter(s) to database...`);
+				console.log(chalk.blue('[GOFR]') + ` ${gofer.manga}: Saving retrieved ${chapters.length} chapter(s) to database...`);
 				await saveChapters(chapters);
 		
-				console.log(`[GOFR] ${gofer.manga}: Loading all saved chapters from database...`);
+				console.log(chalk.blue('[GOFR]') + ` ${gofer.manga}: Loading all saved chapters from database...`);
 				chapters = await loadChapters(gofer);
 				
 				
-				console.log(`[GOFR] ${gofer.manga}: Generating RSS file...`);
+				console.log(chalk.blue('[GOFR]') + ` ${gofer.manga}: Generating RSS file...`);
 				generateRSS(gofer, chapters);
 		
-				console.log(`[GOFR] ${gofer.manga}: RSS file created.`);
+				console.log(chalk.blue('[GOFR]') + ` ${gofer.manga}: RSS file created.`);
 				resolve();
 			}));
 		}
 		
 		Promise.allSettled(promises).then(() => {
-			console.log('[GOFR] Finished generating all RSS files.');
+			console.log(chalk.blue('[GOFR]') + ' Finished generating all RSS files.');
 			finish();
 		});
 	});

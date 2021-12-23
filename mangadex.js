@@ -1,6 +1,7 @@
 import RSS from 'rss-generator';
 import axios from 'axios';
 import fs from 'fs';
+import chalk from 'chalk';
 
 const store = { manga: {}, group: {} };
 async function getMangaTitle(id) {
@@ -49,7 +50,7 @@ function generateRSS(chapters) {
 export default async () => {
 	try {
 		
-		console.log('[MDEX] Logging in...');
+		console.log(chalk.yellow('[MDEX]') + ' Logging in...');
 		const { data: login } = await axios.post('https://api.mangadex.org/auth/login', {
 			username: process.env.MANGADEX_USERNAME,
 			password: process.env.MANGADEX_PASSWORD,
@@ -58,7 +59,7 @@ export default async () => {
 		const token = login.token.session;
 		axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 
-		console.log('[MDEX] Fetching feed...');
+		console.log(chalk.yellow('[MDEX]') + ' Fetching feed...');
 		const { data: feed } = await axios({
 			method: 'get',
 			url: 'https://api.mangadex.org/user/follows/manga/feed',
@@ -68,7 +69,9 @@ export default async () => {
 				'limit': 50,
 			},
 		});
+		console.log(chalk.yellow('[MDEX]') + ' Updates feed fetched.');
 
+		console.log(chalk.yellow('[MDEX]') + ' Fetching titles and group names, then compiling RSS items...');
 		const final = new Array();
 		for (let chapter of feed.data) {
 			let groupName, mangaTitle;
@@ -95,15 +98,15 @@ export default async () => {
 			final.push(i);
 		}
 
-		console.log('[MDEX] Generating RSS...');
+		console.log(chalk.yellow('[MDEX]') + ' Generating RSS...');
 		generateRSS(final);
-		console.log('[MDEX] RSS file created.');
+		console.log(chalk.yellow('[MDEX]') + ' RSS file created.');
 
 		return true;
 	} catch(e) {
 		if (axios.isAxiosError(e)) {
-			console.log('[MDEX] Request error: '.concat(e.message));
-			console.log('[MDEX] Response body:');
+			console.log(chalk.yellow('[MDEX]') + chalk.red(' Request error: '.concat(e.message)));
+			console.log(chalk.yellow('[MDEX]') + ' Response body:');
 			console.log(e.response.data);
 			return false;
 		} else {
