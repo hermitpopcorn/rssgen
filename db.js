@@ -13,7 +13,7 @@ const db = await connect();
 const Chapter = db.define('Chapter', {
 	manga: { type: DataTypes.STRING, allowNull: false },
 	title: { type: DataTypes.STRING, allowNull: false },
-	link: { type: DataTypes.STRING, allowNull: false },
+	url: { type: DataTypes.STRING, allowNull: false },
 	date: { type: DataTypes.DATE, allowNull: true },
 });
 await Chapter.sync();
