@@ -8,7 +8,7 @@ async function getMangaTitle(id) {
 	if (store.manga[id]) { return store.manga[id]; }
 
 	const { data: manga } = await axios.get(`https://api.mangadex.org/manga/${id}`);
-	store.manga[id] = manga.data.attributes.title.en;
+	store.manga[id] = manga.data.attributes.title.en ?? manga.data.attributes.title.ja;
 	return store.manga[id];
 };
 async function getGroupName(id) {
