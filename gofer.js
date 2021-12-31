@@ -4,6 +4,7 @@ import Bokuyaba from './gofers/bokuyaba.js';
 import Yangaru from './gofers/yangaru.js';
 import fs from 'fs';
 import chalk from 'chalk';
+import puppeteer from 'puppeteer-core';
 
 function CrawlError(message = '') {
     this.name = 'CrawlError';
@@ -16,7 +17,13 @@ async function crawlChapters(gofer) {
 	let chapters = [];
 	while (chapters.length < 1) {
 		console.log(chalk.blue('[GOFR]') + ` ${gofer.manga}: Crawling for chapters... (${retries} retries remaining)`);
-		chapters = await gofer.crawl();
+		try {
+			chapters = await gofer.crawl();
+		} catch (e) {
+			if (e instanceof puppeteer.errors.TimeoutError) {
+				throw new CrawlError(`Timed out crawling for ${gofer.manga} chapters.`);
+			}
+		}
 		retries -= 1;
 		if (retries < 0) {
 			throw new CrawlError(`Could not get ${gofer.manga} chapters.`);

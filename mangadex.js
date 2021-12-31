@@ -106,8 +106,7 @@ export default async () => {
 	} catch(e) {
 		if (axios.isAxiosError(e)) {
 			console.log(chalk.yellow('[MDEX]') + chalk.red(' Request error: '.concat(e.message)));
-			console.log(chalk.yellow('[MDEX]') + ' Response body:');
-			console.log(e.response.data);
+			console.log(chalk.yellow('[MDEX]') + ' Response body: ' + e.response.data);
 			return false;
 		} else {
 			throw e;
