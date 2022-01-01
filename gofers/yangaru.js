@@ -1,6 +1,7 @@
 import puppeteer from 'puppeteer-core';
 import { JSDOM } from 'jsdom';
 import { DateTime } from 'luxon';
+import chalk from 'chalk';
 
 function parseDate(dateString) {
 	const split = dateString.split('.');
@@ -16,16 +17,17 @@ export default {
 	],
 
 	crawl: () => {
-		return new Promise(async (resolve) => {
+		return new Promise(async (resolve, reject) => {
 			const browser = await puppeteer.launch({ executablePath: process.env.CHROME_PATH, headless: true });
 			const page = await browser.newPage();
 			try {
 				await page.goto('https://mangahack.com/comics/7612', { waitUntil: 'domcontentloaded' });
 			} catch (e) {
-				if (e instanceof TimeoutError) {
+				if (e instanceof puppeteer.errors.TimeoutError) {
 					console.log('Timeouted but continuing anyway.');
 				} else {
-					throw e;
+					await browser.close();
+					return reject(e);
 				}
 			}
 

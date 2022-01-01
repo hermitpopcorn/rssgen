@@ -1,15 +1,25 @@
 import puppeteer from 'puppeteer-core';
 import { JSDOM } from 'jsdom';
+import chalk from 'chalk';
 
 export default {
 	manga: 'Bokuyaba',
 	url: 'https://mangacross.jp/comics/yabai',
 
 	crawl: () => {
-		return new Promise(async (resolve) => {
+		return new Promise(async (resolve, reject) => {
 			const browser = await puppeteer.launch({ executablePath: process.env.CHROME_PATH, headless: true });
 			const page = await browser.newPage();
-			await page.goto('https://mangacross.jp/comics/yabai', { waitUntil: 'load' });
+			try {
+				await page.goto('https://mangacross.jp/comics/yabai', { waitUntil: 'load' });
+			} catch (e) {
+				if (e instanceof puppeteer.errors.TimeoutError) {
+					console.log(chalk.blue('[GOFR]') + ' Timeouted but continuing anyway.');
+				} else {
+					await browser.close();
+					return reject(e);
+				}
+			}
 
 			const chapters = new Array();
 			await page.waitForSelector('li.episode-list__item').then(async (ul) => {

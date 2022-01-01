@@ -20,9 +20,7 @@ async function crawlChapters(gofer) {
 		try {
 			chapters = await gofer.crawl();
 		} catch (e) {
-			if (e instanceof puppeteer.errors.TimeoutError) {
-				throw new CrawlError(`Timed out crawling for ${gofer.manga} chapters.`);
-			}
+			throw new CrawlError(`Failed fetching ${gofer.manga} chapters. (${e.message})`);
 		}
 		retries -= 1;
 		if (retries < 0) {
@@ -86,7 +84,7 @@ export default () => {
 				} catch(e) {
 					if (e instanceof CrawlError) {
 						console.error(chalk.blue('[GOFR]') + ' ' + chalk.red(e.message));
-						reject(e);
+						return reject(e);
 					} else {
 						throw e;
 					}
