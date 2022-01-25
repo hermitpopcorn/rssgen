@@ -64,6 +64,9 @@ function generateRSS(gofer, chapters) {
 		let chapter = chapters[i];
 		chapter.guid = i;
 		delete chapter.manga;
+		if (!chapter.date) {
+			chapter.date = chapter.createdAt;
+		}
 
 		feed.item(chapter);
 	}
@@ -95,7 +98,6 @@ export default () => {
 		
 				console.log(chalk.blue('[GOFR]') + ` ${gofer.manga}: Loading all saved chapters from database...`);
 				chapters = await loadChapters(gofer);
-				
 				
 				console.log(chalk.blue('[GOFR]') + ` ${gofer.manga}: Generating RSS file...`);
 				generateRSS(gofer, chapters);
