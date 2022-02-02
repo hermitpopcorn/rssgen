@@ -109,7 +109,8 @@ export default async () => {
 			console.log(chalk.yellow('[MDEX]') + ' Response body: ' + e.response.data);
 			return false;
 		} else {
-			throw e;
+			console.log(chalk.yellow('[MDEX]') + chalk.red(' General error: '.concat(e.message)));
+			return false;
 		}
 	}
 };
