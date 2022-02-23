@@ -4,7 +4,6 @@ import Bokuyaba from './gofers/bokuyaba.js';
 import Yangaru from './gofers/yangaru.js';
 import fs from 'fs';
 import chalk from 'chalk';
-import puppeteer from 'puppeteer-core';
 
 function CrawlError(message = '') {
     this.name = 'CrawlError';
@@ -62,7 +61,7 @@ function generateRSS(gofer, chapters) {
 
 	for (let i in chapters) {
 		let chapter = chapters[i];
-		chapter.guid = i;
+		chapter.guid = chapters[i].id;
 		delete chapter.manga;
 		if (!chapter.date) {
 			chapter.date = chapter.createdAt;
