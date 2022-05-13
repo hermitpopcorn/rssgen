@@ -24,7 +24,7 @@ export default {
 				await page.goto('https://mangahack.com/comics/7612', { waitUntil: 'domcontentloaded' });
 			} catch (e) {
 				if (e instanceof puppeteer.errors.TimeoutError) {
-					console.log('Timeouted but continuing anyway.');
+					console.log(chalk.blue('[GOFR]') + ' Timeouted but continuing anyway.');
 				} else {
 					await browser.close();
 					return reject(e);

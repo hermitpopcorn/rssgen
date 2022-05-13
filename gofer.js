@@ -2,8 +2,11 @@ import RSS from 'rss-generator';
 import { Chapter } from './db.js';
 import Bokuyaba from './gofers/bokuyaba.js';
 import Yangaru from './gofers/yangaru.js';
+import Negasuki from './gofers/negasuki.js';
 import fs from 'fs';
 import chalk from 'chalk';
+
+const gofers = [Bokuyaba, Yangaru, Negasuki];
 
 function CrawlError(message = '') {
     this.name = 'CrawlError';
@@ -76,7 +79,6 @@ function generateRSS(gofer, chapters) {
 // Begin
 export default () => {
 	return new Promise((finish) => {
-		const gofers = [Bokuyaba, Yangaru];
 		const promises = new Array();
 		for(let gofer of gofers) {
 			promises.push(new Promise(async (resolve, reject) => {

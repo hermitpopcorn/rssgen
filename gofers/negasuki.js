@@ -1,7 +1,7 @@
 import Mangacross from './mangacross.js';
 
-var manga = 'Bokuyaba';
-var url = 'https://mangacross.jp/comics/yabai';
+var manga = 'Negasuki';
+var url = 'https://mangacross.jp/comics/negasuki';
 
 export default {
 	manga: manga,
