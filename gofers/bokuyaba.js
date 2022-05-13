@@ -1,4 +1,4 @@
-import Mangacross from './mangacross.js';
+import Mangacross from './_mangacross.js';
 
 var manga = 'Bokuyaba';
 var url = 'https://mangacross.jp/comics/yabai';

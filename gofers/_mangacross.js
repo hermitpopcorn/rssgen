@@ -4,13 +4,20 @@ import chalk from 'chalk';
 
 export default (manga, url) => {
 	return new Promise(async (resolve, reject) => {
-		const browser = await puppeteer.launch({ executablePath: process.env.CHROME_PATH, headless: true });
-		const page = await browser.newPage();
+		var browser
+		var page
+		try {
+			browser = await puppeteer.launch({ executablePath: process.env.CHROME_PATH, headless: true });
+			page = await browser.newPage();
+		} catch (e) {
+			console.log(chalk.blue('[GOFR]') + ` ${manga}: Error launching headed browser.`);
+			return reject(e);
+		}
 		try {
 			await page.goto(url, { waitUntil: 'load' });
 		} catch (e) {
 			if (e instanceof puppeteer.errors.TimeoutError) {
-				console.log(chalk.blue('[GOFR]') + ' Timeouted but continuing anyway.');
+				console.log(chalk.blue('[GOFR]') + ` ${manga}: Timeouted but continuing anyway.`);
 			} else {
 				await browser.close();
 				return reject(e);

@@ -1,12 +1,16 @@
 import RSS from 'rss-generator';
 import { Chapter } from './db.js';
-import Bokuyaba from './gofers/bokuyaba.js';
-import Yangaru from './gofers/yangaru.js';
-import Negasuki from './gofers/negasuki.js';
 import fs from 'fs';
 import chalk from 'chalk';
 
-const gofers = [Bokuyaba, Yangaru, Negasuki];
+const gofers = [];
+// get gofers in the folder excluding factories
+const goferFiles = fs.readdirSync('./gofers').filter((i) => !i.startsWith('_'));
+for (let g of goferFiles) {
+	const module = await import('./gofers/' + g);
+	gofers.push(module.default);
+	console.log(chalk.cyan('[GOFR]') + ' Found gofer: ' + module.default.manga);
+}
 
 function CrawlError(message = '') {
     this.name = 'CrawlError';
@@ -109,7 +113,7 @@ export default () => {
 		}
 		
 		Promise.allSettled(promises).then(() => {
-			console.log(chalk.blue('[GOFR]') + ' Finished generating all RSS files.');
+			console.log(chalk.cyan('[GOFR]') + ' Finished generating all RSS files.');
 			finish();
 		});
 	});
