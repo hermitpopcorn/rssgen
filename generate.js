@@ -5,9 +5,16 @@ import chalk from 'chalk';
 
 console.log(chalk.green('[GENR]') + ' Generator started.');
 
-const goferCrawl = startCrawls();
-const dexFeed = getMangaDexFeed();
+let promises = [];
 
-await Promise.allSettled([goferCrawl, dexFeed]);
+const goferCrawl = startCrawls();
+promises.push(goferCrawl);
+
+if (process.env.GET_MANGADEX) {
+	const dexFeed = getMangaDexFeed();
+	promises.push(dexFeed);
+}
+
+await Promise.allSettled(promises);
 
 console.log(chalk.green('[GENR]') + ' Generator finished.');
