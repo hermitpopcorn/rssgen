@@ -24,18 +24,14 @@ export default {
 				browser = await puppeteer.launch({ executablePath: process.env.CHROME_PATH, headless: true });
 				page = await browser.newPage();
 			} catch (e) {
-				console.log(chalk.blue('[GOFR]') + ' Yangaru: Error launching headed browser.');
+				console.log(chalk.blue('[GOFR]') + ' Yangaru: Error launching headless browser.');
 				return reject(e);
 			}
 			try {
 				await page.goto('https://mangahack.com/comics/7612', { waitUntil: 'domcontentloaded' });
 			} catch (e) {
-				if (e instanceof puppeteer.errors.TimeoutError) {
-					console.log(chalk.blue('[GOFR]') + ` Yangaru: Timeouted but continuing anyway.`);
-				} else {
-					await browser.close();
-					return reject(e);
-				}
+				await browser.close();
+				return reject(e);
 			}
 
 			const chapters = new Array();

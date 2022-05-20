@@ -4,7 +4,7 @@ import fs from 'fs';
 import chalk from 'chalk';
 
 const gofers = [];
-// get gofers in the folder excluding factories
+// Get gofers in the folder excluding factories
 const goferFiles = fs.readdirSync('./gofers').filter((i) => !i.startsWith('_'));
 for (let g of goferFiles) {
 	const module = await import('./gofers/' + g);
@@ -26,11 +26,15 @@ async function crawlChapters(gofer) {
 		try {
 			chapters = await gofer.crawl();
 		} catch (e) {
-			throw new CrawlError(`Failed fetching ${gofer.manga} chapters. (${e.message})`);
-		}
-		retries -= 1;
-		if (retries < 0) {
-			throw new CrawlError(`Could not get ${gofer.manga} chapters.`);
+			console.log(chalk.blue('[GOFR]') + chalk.red(` ${gofer.manga}: Failed fetching chapters. (${e.message})`));
+
+			retries -= 1;
+			if (retries < 0) {
+				throw new CrawlError(`Could not get ${gofer.manga} chapters.`);
+			}
+
+			console.log(chalk.blue('[GOFR]') + ` ${gofer.manga}: Waiting for a few seconds before retrying.`);
+			await new Promise(r => setTimeout(r, 3000 * Math.abs(retries - 3)));
 		}
 	}
 
@@ -84,14 +88,17 @@ function generateRSS(gofer, chapters) {
 export default () => {
 	return new Promise((finish) => {
 		const promises = new Array();
-		for(let gofer of gofers) {
+		for(let [index, gofer] of gofers.entries()) {
 			promises.push(new Promise(async (resolve, reject) => {
+				// Prevent gofers from starting on the same time for arbitrary purposes
+				await new Promise(r => setTimeout(r, 2000 * index));
+
 				let chapters;
 				try {
 					chapters = await crawlChapters(gofer);
 				} catch(e) {
 					if (e instanceof CrawlError) {
-						console.error(chalk.blue('[GOFR]') + ' ' + chalk.red(e.message));
+						console.error(chalk.blue('[GOFR]') + ' ' + chalk.redBright(e.message));
 						return reject(e);
 					} else {
 						throw e;
@@ -107,7 +114,7 @@ export default () => {
 				console.log(chalk.blue('[GOFR]') + ` ${gofer.manga}: Generating RSS file...`);
 				generateRSS(gofer, chapters);
 		
-				console.log(chalk.blue('[GOFR]') + ` ${gofer.manga}: RSS file created.`);
+				console.log(chalk.blue('[GOFR]') + chalk.greenBright(` ${gofer.manga}: RSS file created.`));
 				resolve();
 			}));
 		}

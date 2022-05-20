@@ -10,18 +10,14 @@ export default (manga, url) => {
 			browser = await puppeteer.launch({ executablePath: process.env.CHROME_PATH, headless: true });
 			page = await browser.newPage();
 		} catch (e) {
-			console.log(chalk.blue('[GOFR]') + ` ${manga}: Error launching headed browser.`);
+			console.log(chalk.blue('[GOFR]') + ` ${manga}: Error launching headless browser.`);
 			return reject(e);
 		}
 		try {
 			await page.goto(url, { waitUntil: 'load' });
 		} catch (e) {
-			if (e instanceof puppeteer.errors.TimeoutError) {
-				console.log(chalk.blue('[GOFR]') + ` ${manga}: Timeouted but continuing anyway.`);
-			} else {
-				await browser.close();
-				return reject(e);
-			}
+			await browser.close();
+			return reject(e);
 		}
 
 		const chapters = new Array();
